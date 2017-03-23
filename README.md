@@ -1,2 +1,2 @@
 # warden
-A dashboard for displaying operational metrics
+A dashboarding tool to display operational information

@@ -1,0 +1,94 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block styles %}
+    {{super()}}
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='wardenstyle.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='wardenskins.min.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='sidebar.less') }}">
+{% endblock %}
+{% block head %} {{super()}}
+{% endblock %}
+{% block navbar %}
+<body class="hold-transition skin-green layout-top-nav">
+<div class="wrapper">
+
+  <header class="main-header">
+  <nav class="navbar navbar-static-top">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand"><b>Warden</b>OPS</a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/new">New Service<span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Apps</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">TestingJS <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+  </header>
+
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar Menu -->
+      <ul class="sidebar-menu">
+        <li class="header">HEADER</li>
+        <!-- Optionally, you can add icons to the links -->
+        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a href="#">Link in level 2</a></li>
+            <li><a href="#">Link in level 2</a></li>
+          </ul>
+        </li>
+      </ul>
+      <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+
+  </div>
+</body>
+{% endblock %} {% block content %}
+<div class="container">
+    {%- for category, message in get_flashed_messages(with_categories=true) -%}
+    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ message }}
+        <button type="button" class="close" data-dismiss="alert"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span class="sr-only">Close</span></button>
+    </div>
+    {%- endfor -%} {% block content_container %}{% endblock %}
+</div>
+{% endblock %} {% block scripts %} {{ super() }}
+
+<script src="{{ url_for('static', filename='js/jquery.graphite.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}

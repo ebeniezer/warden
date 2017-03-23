@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content_container %}
+<legend>New Service</legend>
+<form class="form-horizontal" method="post">
+{{ form.hidden_tag() }}
+{{ wtf.form_errors(form, hiddens='only') }}
+
+{{ wtf.form_field(form.owner) }}
+{{ wtf.form_field(form.service_name) }}
+{{ wtf.form_field(form.in_production) }}
+{{ wtf.form_field(form.docs) }}
+{{ wtf.form_field(form.git_source) }}
+<div class="form-actions">
+<button type="submit" class="btn">SAVE</button>
+</div>
+</form>
+{% endblock %}

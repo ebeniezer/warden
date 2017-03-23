@@ -1,0 +1,13 @@
+runtime: python27
+
+
+env:
+    HTTP_HOST: "${HTTP_HOST:-localhost}"
+    HTTP_PORT: "${HTTP_PORT:-8002}"
+    DEBUG: 1
+
+run: warden
+run_web: warden
+
+ci: |
+  echo 'foo! bar!'

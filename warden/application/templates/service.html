@@ -1,0 +1,421 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content_container %}
+
+<div class="content-wrapper">
+
+<section class="content-header">
+      <h1>
+        Application Detail
+        <small>{{ service.name }}</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="/list">List</a></li>
+        <li class="active">{{ service.name }}</li>
+      </ol>
+</section>
+
+<section class="content">
+
+
+      <!-- Default box -->
+        <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-info">
+            <div class="box-header">
+              <h3 class="box-title">Overview</h3>
+            </div>
+            <!-- /.box-header -->
+            <ul class="list-group">
+              <li class="list-group-item"><b>Owner:</b> {{ service.owner }}</li>
+              <li class="list-group-item"><b>Jenkins Build Status:</b>    <span class="label label-jenkins{{ jenkinsbuilds }}">{{ jenkinsbuilds }}</span></li>
+              {% for jenkinstime in jenkinstimes|sort(attribute='duration', reverse=True) %}
+              {% if loop.index <= 1 %}
+              <li class="list-group-item"><b>Last Jenkins Build Time Elapsed:</b>  {{ jenkinstime.duration }} </li>
+              {% endif %}
+              {% endfor %}
+              <li class="list-group-item"><b>Current Deployed version:</b> {{ jenkinsversion }}</li>
+              <li class="list-group-item"><b>Brief Synopsis:</b> {{ wildcards.hostname }}</li>
+              <li class="list-group-item"><b>NTFsuite:</b> {{ status.suite }}</li>
+            </ul>
+          </div>
+         </div>
+        </div>
+
+
+        <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-info">
+            <div class="box-header">
+              <h3 class="box-title">Infrastructure Compenents</h3>
+            </div>
+            <!-- /.box-header -->
+          <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+            <span class="info-box-icon bg-blue"><i class="fa fa-cogs"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total CPU Cores</span>
+              <span class="info-box-number">{{ servers|sum(attribute='cpu_count') }}</span>
+            </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-cube"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total Allocated RAM</span>
+              <span class="info-box-number">{{ rams.total_ram }}</span>
+            </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+            <span class="info-box-icon bg-purple"><i class="fa fa-hdd-o"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total Allocated Disk</span>
+              <span class="info-box-number">260GB</span>
+            </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-signal"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total Network I/O</span>
+              <span class="info-box-number">20MB</span>
+            </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+            </div><!-- /.col -->
+        </div>
+          </div>
+          </div>
+          </div>
+  <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-info">
+            <div class="box-header">
+              <h3 class="box-title">Servers for {{ service.name }}</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>Hostname</th>
+                  <th>Size</th>
+                  <th>Status</th>
+                  <th>Uptime</th>
+                </tr>
+                  {% for server in servers %}
+                <tr>
+                  <td>{{ server.hostname }}</td>
+                  <td>{{ server.size }}</td>
+                  <td><span class="label label-{{ server.status }}">{{ server.status }}</span></td>
+                  <td>{{ server.uptime }}</td>
+                </tr>
+                  {% endfor %}
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+      <!-- /.box -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Monthly Alerting Report</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <p class="text-center">
+                    <strong>1 Jun, 2016 - 30 Jun, 2016</strong>
+                  </p>
+
+                  <div class="chart">
+                    <!-- Sales Chart Canvas -->
+                    <canvas id="salesChart" style="height: 180px;"></canvas>
+                  </div>
+                  <!-- /.chart-responsive -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-4">
+                  <p class="text-center">
+                    <strong>Alerts by source vs. rest of sstk</strong>
+                  </p>
+
+                  <div class="progress-group">
+                    <span class="progress-text">Pager Duty</span>
+                    <span class="progress-number"><b>20</b>/30</span>
+
+                    <div class="progress sm">
+                      <div class="progress-bar progress-bar-aqua" style="width: 80%"></div>
+                    </div>
+                  </div>
+                  <!-- /.progress-group -->
+                  <div class="progress-group">
+                    <span class="progress-text">Pingdom</span>
+                    <span class="progress-number"><b>10</b>/20</span>
+
+                    <div class="progress sm">
+                      <div class="progress-bar progress-bar-red" style="width: 50%"></div>
+                    </div>
+                  </div>
+                  <!-- /.progress-group -->
+                  <div class="progress-group">
+                    <span class="progress-text">Thousand Eyes</span>
+                    <span class="progress-number"><b>5</b>/10</span>
+
+                    <div class="progress sm">
+                      <div class="progress-bar progress-bar-green" style="width: 50%"></div>
+                    </div>
+                  </div>
+                  <!-- /.progress-group -->
+                  <div class="progress-group">
+                    <span class="progress-text">NTF</span>
+                    <span class="progress-number"><b>10</b>/30</span>
+
+                    <div class="progress sm">
+                      <div class="progress-bar progress-bar-yellow" style="width: 33%"></div>
+                    </div>
+                  </div>
+                  <!-- /.progress-group -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- ./box-body -->
+            <div class="box-footer">
+              <div class="row">
+                <div class="col-sm-3 col-xs-6">
+                  <div class="description-block border-right">
+                    <!--<span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>-->
+                    {% for pdservicestat in pdservicestats %}
+                    {% if loop.index <= 1 %}
+                    <h5 class="description-header">{{ pdservicestat.escalation_name }}</h5>
+                    {% endif %}
+                    {% endfor %}
+                    <span class="description-text">TOTAL PD ALERTS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-3 col-xs-6">
+                  <div class="description-block border-right">
+                    <h5 class="description-header">10</h5>
+                    <span class="description-text">TOTAL PINGDOM ALERTS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-3 col-xs-6">
+                  <div class="description-block border-right">
+                    <h5 class="description-header">5</h5>
+                    <span class="description-text">TOTAL THOUSAND EYES ALERTS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-3 col-xs-6">
+                  <div class="description-block">
+                    <h5 class="description-header">10</h5>
+                    <span class="description-text">TOTAL NTF ALERTS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- /.box-footer -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Monthly Behavioral Report</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+
+      <div class="row">
+        <div class="box-body">
+        <div class="col-md-6">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-purple">
+              <!--<div class="widget-user-image">
+                <img class="img-circle" src="../dist/img/slack.jpg" alt="Slack">
+              </div>-->
+              <h3 class="widget-user-username">Slack Mentions</h3>
+              <h5 class="widget-user-desc">By Channel</h5>
+            </div>
+            <div class="box-footer no-padding">
+              <ul class="nav nav-stacked">
+                <li><a href="#">POC <span class="pull-right badge bg-blue">20</span></a></li>
+                <li><a href="#">Developer Tools <span class="pull-right badge bg-aqua">5</span></a></li>
+                <li><a href="#">Warroom <span class="pull-right badge bg-green">12</span></a></li>
+                <li><a href="#">{{ service.name }} <span class="pull-right badge bg-red">30</span></a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.widget-user -->
+        </div>
+        <div class="col-md-6">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-teal">
+              <!--<div class="widget-user-image">
+                <img class="img-circle" src="../dist/img/slack.jpg" alt="Slack">
+              </div>-->
+              <h3 class="widget-user-username">JIRA Mentions</h3>
+              <h5 class="widget-user-desc">By Team</h5>
+            </div>
+            <div class="box-footer no-padding">
+              <ul class="nav nav-stacked">
+                <li><a href="#">OPS <span class="pull-right badge bg-blue">20</span></a></li>
+                <li><a href="#">{{ service.name }} <span class="pull-right badge bg-red">30</span></a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.widget-user -->
+        </div>
+        </div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+  <div class="row">
+        <div class="col-md-12">
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Time Series - SYSTEMS</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+
+      <div class="row">
+        <div class="box-body">
+            <div class="col-md-6">
+              <p class="text-center">
+                <strong>CPU Load - 24 HRS</strong>
+              </p>
+          <img id="graph">
+              </div>
+            <div class="col-md-6">
+              <p class="text-center">
+                <strong>Disk Free - 24 HRS</strong>
+              </p>
+              <img id="graph2">
+              </div>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="text-center">
+                <strong>Mem Free - 24 HRS</strong>
+              </p>
+              <img id="graph3">
+              </div>
+            <div class="col-md-6">
+              <p class="text-center">
+                <strong>Packets RX - 24 HRS</strong>
+              </p>
+              <img id="graph4">
+              </div>
+            </div>
+            </div>
+          </div>
+            </div>
+        </div>
+        </div>
+
+
+</section>
+  </div>
+{% endblock %}
+
+
+<!-- page script -->
+{% block scripts %}
+    {{ super() }}
+
+<script>
+          $("#graph").graphite({
+        from: "-24hours",
+         target: [
+         {% for wildcard in wildcards|sort(attribute='role', reverse=True) %}
+         {% if loop.index <= 1 %}
+           "systems.prod-{{ wildcard.hostname }}.load.load.midterm",
+         {% endif %}
+         {% endfor %}
+           ],
+         url : "http://graphite2.shuttercorp.net/render/"
+        });
+
+        $("#graph2").graphite({
+        from: "-24hours",
+         target: [
+         {% for wildcard in wildcards|sort(attribute='role', reverse=True) %}
+         {% if loop.index <= 1 %}
+           "systems.prod-{{ wildcard.hostname }}.df.root.df_complex.free.value",
+         {% endif %}
+         {% endfor %}
+           ],
+         url : "http://graphite2.shuttercorp.net/render/"
+        });
+
+        $("#graph3").graphite({
+        from: "-24hours",
+         target: [
+           {% for wildcard in wildcards|sort(attribute='role', reverse=True) %}
+         {% if loop.index <= 1 %}
+           "systems.prod-{{ wildcard.hostname }}.memory.memory.free.value",
+         {% endif %}
+         {% endfor %}
+           ],
+         url : "http://graphite2.shuttercorp.net/render/"
+        });
+
+        $("#graph4").graphite({
+        from: "-24hours",
+         target: [
+           {% for wildcard in wildcards|sort(attribute='role', reverse=True) %}
+         {% if loop.index <= 1 %}
+           "systems.prod-{{ wildcard.hostname }}.interface.eth0.if_packets.rx",
+         {% endif %}
+         {% endfor %}
+           ],
+         url : "http://graphite2.shuttercorp.net/render/"
+        });
+          </script>
+{% endblock %}

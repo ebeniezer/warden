@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content_container %}
+
+<section class="content">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Servers for {{ service.name }}</h3>
+
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>Hostname</th>
+                  <th>Size</th>
+                  <th>Status</th>
+                </tr>
+                  {% for server in servers %}
+                <tr>
+                  <td>{{ server.hostname }}</td>
+                  <td>{{ server.size }}</td>
+                  <td><span class="label label-{{ server.status }}">{{ server.status }}</span></td>
+                </tr>
+                  {% endfor %}
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="info-box">
+
+
+            <span class="info-box-icon bg-aqua"><i class="fa fa-cog-o"></i></span>
+            <div class="info-box-content">
+            <span class="info-box-text">Nodes</span>
+            <span class="info-box-number">4</span>
+            </div><!-- /.info-box-content -->
+
+            </div><!-- /.info-box -->
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+
+</section>
+{% endblock %}
