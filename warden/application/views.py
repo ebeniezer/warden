@@ -2,7 +2,7 @@ from flask import render_template, url_for, request, redirect, current_app, flas
 from . import application_blueprint
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import distinct, exists, select
-from warden import db, c_client, ntf_client, pd_client, pingdom_client, graphite_client, jenkins_client
+from warden import db, c_client, ntf_client, pd_client, pingdom_client, jenkins_client
 from warden.models.service import Service
 from warden.forms import ServiceEdit, ServiceNew
 
@@ -49,11 +49,7 @@ def service(name):
     rams = c_client.get_ramcount(name)
     status = ntf_client.get_suite(service)
     status = sorted(status, key=lambda app: app.get('suite'))
-    cpugraph = graphite_client.get_cpuload()
     wildcards = c_client.get_wildcardservers(service)
-    jenkinstimes = jenkins_client.get_buildtime(service)
-    jenkinsbuilds = jenkins_client.get_latestbuild(service)
-    jenkinsversion = jenkins_client.get_latestversion(service)
     pdservicestats = pd_client.get_servicestats(service)
     return render_template('service.html',
                            service=service,
@@ -64,11 +60,7 @@ def service(name):
                            servers=servers,
                            rams=rams,
                            git_source=git_source,
-                           cpugraph=cpugraph,
                            wildcards=wildcards,
-                           jenkinstimes=jenkinstimes,
-                           jenkinsbuilds=jenkinsbuilds,
-                           jenkinsversion=jenkinsversion,
                            pdservicestats=pdservicestats
                            )
 

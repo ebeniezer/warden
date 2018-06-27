@@ -38,9 +38,6 @@ pingdom_client = pingdom_client.PingdomClient(app)
 import jira_client
 jira_client = jira_client.JiraClient(app)
 
-import graphite_client
-graphite_client = graphite_client.GraphiteClient(app)
-
 import jenkins_client
 jenkins_client = jenkins_client.JenkinsClient(app)
 

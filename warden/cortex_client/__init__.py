@@ -52,7 +52,6 @@ class CortexClient():
         serversbyservice = [
             {
                 "hostname": result['name'],
-                "role": result['properties']['role'],
                 "status": result['status'],
                 "cpu_count": result['properties']['cpu']['count'],
                 "apps": result['properties']['shutterstock']['apps'],

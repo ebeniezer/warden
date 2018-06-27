@@ -3,7 +3,7 @@ from warden.forms import ServiceEdit
 from urlparse import urlparse
 
 class Service(db.Model):
-    __tablename__ = 'warden'
+    __tablename__ = 'wardentest'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     in_production = db.Column(db.Boolean)
