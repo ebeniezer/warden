@@ -2,6 +2,7 @@ from warden import db
 from warden.forms import ServiceEdit
 from urlparse import urlparse
 
+# Test DB for now
 class Service(db.Model):
     __tablename__ = 'wardentest'
     id = db.Column(db.Integer, primary_key=True)
