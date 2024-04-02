@@ -120,7 +120,4 @@ class CortexClient():
             if wildcard['hostname'] > 0:
                 wildcard['hostname'] = (re.match(r'^(\w+)-(\D+)', wildcard['hostname']).group(2) + '*')
 
-
-        #current_app.logger.debug("Shortened Hostname: %s" % wildcards['hostname'])
-
         return wildcards
