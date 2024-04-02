@@ -121,5 +121,6 @@ class PagerdutyClient():
           if match is not None:
             servicestat['escalation_name'] = "Sammy"
 
+        # test logging
         #current_app.logger.debug("PD_by_service11111444444: %s" % servicestat['escalation_name'])
         return servicestats
