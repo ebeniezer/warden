@@ -2,7 +2,6 @@ from flask import Blueprint, current_app
 import requests
 from datetime import datetime, timedelta
 import json
-import subprocess
 import re
 
 STATUSES = 'acknowledged'
@@ -41,28 +40,17 @@ class PagerdutyClient():
         return triggered
 
     def get_count(self):
-        reqstrig = subprocess.Popen([
-            "curl", "-sSfL", "-H", "Accept: application/vnd.pagerduty+json;version=2", "-H", "Content-type: application/json",
-            "-H", "Authorization: Token token=BuLKbiqpzB4xqw4v35hn", "-X", "GET", "-G", "https://api.pagerduty.com/incidents/count?statuses%5B%5D=triggered"
-        ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        curlstdouttrig, curlstderrtrig = reqstrig.communicate()
-        optrig = str(curlstdouttrig)
-        therealtrig = re.findall("\d", optrig)[0]
-        trigint = int(therealtrig)
+        self.api_version = '2'
+        auth = {'Accept': 'application/vnd.pagerduty+json;version=' + self.api_version,
+                'Authorization': 'Token token={0}'.format(self.pd_token),
+                'Content-type': 'application/json'}
+        url = '%s/incidents/count' % (self.pd_host)
+        current_app.logger.debug("PD_Count url: %s" % url)
 
-        reqsack = subprocess.Popen([
-            "curl", "-sSfL", "-H", "Accept: application/vnd.pagerduty+json;version=2", "-H",
-            "Content-type: application/json",
-            "-H", "Authorization: Token token=BuLKbiqpzB4xqw4v35hn", "-X", "GET", "-G",
-            "https://api.pagerduty.com/incidents/count?statuses%5B%5D=acknowledged"
-        ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        curlstdoutack, curlstderrack = reqsack.communicate()
-        opack = str(curlstdoutack)
-        therealack = re.findall("\d", opack)[0]
-        ackint = int(therealack)
-
-        problemset = [trigint, ackint]
-        problemsum = sum(list(problemset))
+        problemsum = 0
+        for status in ('triggered', 'acknowledged'):
+            results = requests.get(url, headers=auth, params={'statuses[]': status})
+            problemsum += results.json().get('total', 0)
 
         return problemsum
 
